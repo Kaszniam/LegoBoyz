@@ -1,49 +1,39 @@
-import { FunctionComponent, useState } from "react";
-import { StyledPageContainer } from "../components/StyledPageContainer";
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  IconButton,
-  Paper,
-  styled,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Typography,
-} from "@mui/material";
+import {FunctionComponent, useState} from "react";
+import {StyledPageContainer} from "../components/StyledPageContainer";
+import {Accordion, AccordionDetails, AccordionSummary, styled, Typography,} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import {
-  CategoryScale,
-  Chart as ChartJS,
-  Legend,
-  LinearScale,
-  LineElement,
-  PointElement,
-  TimeScale,
-  Title,
-  Tooltip,
-} from "chart.js";
-import ChartStreaming from "chartjs-plugin-streaming";
-import "chartjs-adapter-luxon";
-import { Line } from "react-chartjs-2";
-import { DateTime } from "luxon";
-import { StyledLink } from "../components/StyledLink";
+// import {
+//   CategoryScale,
+//   Chart as ChartJS,
+//   Legend,
+//   LinearScale,
+//   LineElement,
+//   PointElement,
+//   TimeScale,
+//   Title,
+//   Tooltip,
+// } from "chart.js";
+// import ChartStreaming from "chartjs-plugin-streaming";
+// import "chartjs-adapter-luxon";
+// import { Line } from "react-chartjs-2";
+import {DateTime} from "luxon";
+import {StyledLink} from "../components/StyledLink";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import {useParams} from "react-router-dom";
+import {SegmentVisualization} from "./segmentView/SegmentVisualization";
+import {SegmentDetails} from "./segmentView/SegmentDetails";
 
-ChartJS.register(
-  ChartStreaming,
-  CategoryScale,
-  LinearScale,
-  TimeScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
+// ChartJS.register(
+//   ChartStreaming,
+//   CategoryScale,
+//   LinearScale,
+//   TimeScale,
+//   PointElement,
+//   LineElement,
+//   Title,
+//   Tooltip,
+//   Legend
+// );
 
 const options = {
   responsive: false,
@@ -65,6 +55,8 @@ const options = {
 export interface SegmentViewProps {}
 
 export const SegmentView: FunctionComponent<SegmentViewProps> = () => {
+  const { segmentId } = useParams<{ segmentId: string }>();
+
   const [chartData, setChartData] = useState(
     Array.from({ length: 100 })
       .map((i, index) => ({
@@ -102,59 +94,10 @@ export const SegmentView: FunctionComponent<SegmentViewProps> = () => {
           <ArrowBackIcon className="icon" />
           <Typography variant="h5">Back</Typography>
         </StyledLink>
-        <Typography variant="h4">Segment ID: 1234-ASDF-4567.</Typography>
+        <Typography variant="h4">Segment ID: {segmentId}</Typography>
         <div className="segment-details">
-          <Paper>
-            <Table aria-label="Segment Details">
-              <TableHead>
-                <TableRow>
-                  <TableCell>Resource</TableCell>
-                  <TableCell align="right">Value</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                <TableRow
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell>ID</TableCell>
-                  <TableCell align="right">1234-ASDF-4567</TableCell>
-                </TableRow>
-                <TableRow
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell>Material</TableCell>
-                  <TableCell align="right">Wood</TableCell>
-                </TableRow>
-                <TableRow
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell>Manufacturer</TableCell>
-                  <TableCell align="right">Samsung</TableCell>
-                </TableRow>
-                <TableRow
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell>Mounted Time</TableCell>
-                  <TableCell align="right">01-11-2017</TableCell>
-                </TableRow>
-                <TableRow
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell>Demounted Time</TableCell>
-                  <TableCell align="right">01-11-2020</TableCell>
-                </TableRow>
-                <TableRow
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell>Used Time</TableCell>
-                  <TableCell align="right">3 years, 2 months</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </Paper>
-          <Visualisation>
-            <img src="/ape.png" alt="Ape together string" />
-          </Visualisation>
+          <SegmentDetails />
+          <SegmentVisualization />
         </div>
         <div className="segment-charts">
           <Accordion defaultExpanded>
@@ -163,27 +106,25 @@ export const SegmentView: FunctionComponent<SegmentViewProps> = () => {
               aria-controls="panel1bh-content"
               id="panel1bh-header"
             >
-              <Typography sx={{ width: "33%", flexShrink: 0 }}>
-                Lifespan
-              </Typography>
+              <Typography>Lifespan</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Line
-                height={300}
-                width={1300}
-                data={{
-                  labels,
-                  datasets: [
-                    {
-                      label: "Lifespan",
-                      data: chartData,
-                      borderColor: "rgb(255, 99, 132)",
-                      backgroundColor: "rgba(255, 99, 132, 0.5)",
-                    },
-                  ],
-                }}
-                options={options}
-              />
+              {/*<Line*/}
+              {/*  height={300}*/}
+              {/*  width={1300}*/}
+              {/*  data={{*/}
+              {/*    labels,*/}
+              {/*    datasets: [*/}
+              {/*      {*/}
+              {/*        label: "Lifespan",*/}
+              {/*        data: chartData,*/}
+              {/*        borderColor: "rgb(255, 99, 132)",*/}
+              {/*        backgroundColor: "rgba(255, 99, 132, 0.5)",*/}
+              {/*      },*/}
+              {/*    ],*/}
+              {/*  }}*/}
+              {/*  options={options}*/}
+              {/*/>*/}
             </AccordionDetails>
           </Accordion>
           <Accordion>
@@ -229,19 +170,6 @@ const StyledSegmentPage = styled("div")`
   & .segment-charts {
     display: flex;
     flex-direction: column;
-  }
-`;
-
-const Visualisation = styled("div")`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  & img {
-    overflow: hidden;
-    object-fit: fill;
-    //width: 100%;
-    height: 100%;
   }
 `;
 

@@ -13,7 +13,7 @@ const App = () => (
       <Header />
       <Routes>
         <Route index element={<SegmentListView />} />
-        <Route path="/segments/:id" element={<SegmentView />} />
+        <Route path="/segments/:segmentId" element={<SegmentView />} />
       </Routes>
     </ThemeProvider>
   </div>
