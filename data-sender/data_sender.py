@@ -28,9 +28,10 @@ def init():
 
 
 def read_data(ltr, sht):
-    ltr_uuid = uuid.uuid4()
     while True:
-        ltr_payload = {
+        try:
+            ltr_uuid = uuid.uuid4()
+            ltr_payload = {
                 'rfid': RFID,
                 'guid': str(ltr_uuid),
                 'datetime': datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
@@ -38,9 +39,11 @@ def read_data(ltr, sht):
                 'light': ltr.lux,
                 'temperature': sht.temperature,
                 'humidity': sht.relative_humidity
-        }
-        res=requests.post(URL, json = ltr_payload, verify=False)
-        time.sleep(0.5)
+            }
+            res=requests.post(URL, json = ltr_payload, verify=False)
+            time.sleep(0.5)
+        except requests.exceptions.ConnectionError as e:
+            pass
 
 
 
