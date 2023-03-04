@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, useEffect, useState } from "react";
 import { StyledPageContainer } from "../components/StyledPageContainer";
 import {
   Accordion,
@@ -6,26 +6,193 @@ import {
   AccordionSummary,
   css,
   makeStyles,
+  Paper,
   styled,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  TimeScale,
+} from "chart.js";
+import ChartStreaming from "chartjs-plugin-streaming";
+import "chartjs-adapter-luxon";
+import { Line } from "react-chartjs-2";
+import { DateTime } from "luxon";
+
+ChartJS.register(
+  ChartStreaming,
+  CategoryScale,
+  LinearScale,
+  TimeScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+const options = {
+  responsive: false,
+  maintainAspectRatio: false,
+  scales: {
+    x: {
+      type: "realtime",
+      realtime: {
+        duration: 1000 * 60 * 60,
+      },
+      title: {
+        display: true,
+        text: "Date",
+      },
+    },
+  },
+};
 
 export interface SegmentViewProps {}
 
 export const SegmentView: FunctionComponent<SegmentViewProps> = () => {
+  const [chartData, setChartData] = useState(
+    Array.from({ length: 100 })
+      .map((i, index) => ({
+        x: DateTime.now().minus({ hours: index }).toISO(),
+        y: Math.random() * 10,
+      }))
+      .reverse()
+  );
+  const [labels, setLabels] = useState(
+    Array.from({ length: 1000 }).map((i, index) =>
+      DateTime.now().minus({ minutes: 48 }).toISO()
+    )
+  );
+
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     const newLabel = DateTime.now().toISO();
+  //     setChartData((current) => {
+  //       return [
+  //         ...current,
+  //         {
+  //           x: newLabel,
+  //           y: Math.random() * 10,
+  //         },
+  //       ];
+  //     });
+  //     setLabels((labels) => [...labels, newLabel]);
+  //   }, 5000);
+  //   return () => clearInterval(intervalId);
+  // }, []);
   return (
     <StyledPageContainer>
       <StyledSegmentPage>
         <div className="segment-details">
-          <div>data</div>
+          <Paper>
+            <Table aria-label="Segment Details">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Resource</TableCell>
+                  <TableCell align="right">Value</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <TableRow
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell>
+                    ID
+                  </TableCell>
+                  <TableCell align="right">1234-ASDF-4567</TableCell>
+                </TableRow>
+                <TableRow
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell>
+                    Material
+                  </TableCell>
+                  <TableCell align="right">Wood</TableCell>
+                </TableRow>
+                <TableRow
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell>
+                    Manufacturer
+                  </TableCell>
+                  <TableCell align="right">Samsung</TableCell>
+                </TableRow>
+                <TableRow
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell>
+                    Mounted Time
+                  </TableCell>
+                  <TableCell align="right">01-11-2017</TableCell>
+                </TableRow>
+                <TableRow
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell>
+                    Demounted Time
+                  </TableCell>
+                  <TableCell align="right">01-11-2020</TableCell>
+                </TableRow>
+                <TableRow
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell>
+                    Used Time
+                  </TableCell>
+                  <TableCell align="right">3 years, 2 months</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </Paper>
           <Visualisation>
             <img src="/ape.png" alt="Ape together string" />
           </Visualisation>
         </div>
         <div className="segment-charts">
-          <h1>Charts</h1>
-          <div>Usage Chart Here :)</div>
+          <Accordion defaultExpanded>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1bh-content"
+              id="panel1bh-header"
+            >
+              <Typography sx={{ width: "33%", flexShrink: 0 }}>
+                Lifespan
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Line
+                height={300}
+                width={1300}
+                data={{
+                  labels,
+                  datasets: [
+                    {
+                      label: "Lifespan",
+                      data: chartData,
+                      borderColor: "rgb(255, 99, 132)",
+                      backgroundColor: "rgba(255, 99, 132, 0.5)",
+                    },
+                  ],
+                }}
+                options={options}
+              />
+            </AccordionDetails>
+          </Accordion>
           <Accordion>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
@@ -33,7 +200,7 @@ export const SegmentView: FunctionComponent<SegmentViewProps> = () => {
               id="panel1bh-header"
             >
               <Typography sx={{ width: "33%", flexShrink: 0 }}>
-                Other
+                Other Factors
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
@@ -53,15 +220,16 @@ export const SegmentView: FunctionComponent<SegmentViewProps> = () => {
 const StyledSegmentPage = styled("div")`
   display: flex;
   flex-direction: column;
+  gap: 2rem;
 
   & .segment-details {
-    height: 20rem;
+    min-height: 20rem;
     display: flex;
     gap: 1rem;
 
     & > * {
       flex: 1;
-      box-shadow: #61dafb 1px 1px 10px 5px;
+      //box-shadow: #61dafb 1px 1px 10px 5px;
     }
   }
 
@@ -75,14 +243,13 @@ const Visualisation = styled("div")`
   display: flex;
   align-items: center;
   justify-content: center;
-  
+
   & img {
     overflow: hidden;
     object-fit: fill;
-    width: 100%;
+    //width: 100%;
     height: 100%;
   }
-
 `;
 
 const StyledView = styled("div")`
@@ -93,3 +260,7 @@ const StyledView = styled("div")`
   & .icon {
   }
 `;
+
+// const StyledLine = styled(Line)`
+//
+// `;
