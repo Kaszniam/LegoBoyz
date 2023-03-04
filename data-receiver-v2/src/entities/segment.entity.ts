@@ -2,9 +2,9 @@ import { Entity, Column, PrimaryColumn } from 'typeorm';
 
 @Entity()
 export class Segment {
-  @PrimaryColumn({ length: 22 })
+  @Column({ length: 22 })
   guid: string;
-  @Column({ length: 24 })
+  @PrimaryColumn({ length: 24 })
   rfid: string;
   @Column({ length: 1 })
   building: string;

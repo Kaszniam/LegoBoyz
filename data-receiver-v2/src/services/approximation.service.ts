@@ -29,8 +29,8 @@ export class ApproximationService {
     measuredValues: { rfid: string; temperature: number }[],
     approximatedSegment: Segment,
   ): number {
-    const uvDataWithDistance = sensoredSegments.map((seg) => {
-      const uvValue = measuredValues.find(
+    const temperatureDataWithDistance = sensoredSegments.map((seg) => {
+      const temperatureValue = measuredValues.find(
         (val) => val.rfid == seg.rfid,
       ).temperature;
       const distance =
@@ -38,10 +38,14 @@ export class ApproximationService {
           ((seg.y - approximatedSegment.y) ^ 2) +
           ((seg.z - approximatedSegment.z) ^ 2)) ^
         (1 / 2);
-      return [uvValue, distance];
+      return [temperatureValue, distance];
     });
+    // console.log(temperatureDataWithDistance[0]);
+    // console.log(temperatureDataWithDistance[1]);
+    // console.log(temperatureDataWithDistance[2]);
+    // console.log(temperatureDataWithDistance[3]);
     let temperatureApproximation = 0;
-    uvDataWithDistance.forEach(
+    temperatureDataWithDistance.forEach(
       (data) => (temperatureApproximation += data[0] - data[1] / 1000),
     );
     return temperatureApproximation / 4;

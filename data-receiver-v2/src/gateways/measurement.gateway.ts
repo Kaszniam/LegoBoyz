@@ -6,13 +6,13 @@ import {
   OnGatewayConnection,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { MeasurementData } from '../data/measurement';
+import { Measurement } from '../entities/measurement.entity';
 
 @WebSocketGateway()
 export class MeasurementGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayConnection
 {
-  private logger: Logger = new Logger('AppGateWay');
+  private logger: Logger = new Logger('MeasurementGateWay');
   @WebSocketServer() private server: Server;
 
   afterInit() {
@@ -26,8 +26,13 @@ export class MeasurementGateway
     this.logger.log(`Client disconnected ${client.id}`);
   }
 
-  handleMeasurementUpdate(measurement: MeasurementData): string {
-    this.server.emit('measurement-update', { measurement });
+  handleMeasurementUpdate(measurement: Measurement): string {
+    if (!measurement.isApproximated) {
+      this.server.emit('measurement-update', { measurement });
+      console.log('measurement-update');
+    }
+    this.server.emit(`measurement-${measurement.rfid}`, { measurement });
+    console.log(`measurement-${measurement.rfid}-update`);
     return `Measurement update event send!`;
   }
 }

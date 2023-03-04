@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { MeasurementService } from '../services/measurement.service';
 import { MeasurementData } from '../data/measurement';
 import { Measurement } from '../entities/measurement.entity';
@@ -8,16 +8,17 @@ export class MeasurementController {
   constructor(private readonly measurementService: MeasurementService) {}
 
   @Get()
-  getDefault(): Promise<Measurement[]> {
+  getDefault(@Query('rfid') rfid): Promise<Measurement[]> {
+    if (rfid) {
+      return this.measurementService.getByRfid(rfid);
+    }
     return this.measurementService.getAll();
   }
 
   @Post()
   addMeasurement(@Body() measurement: MeasurementData): string {
+    console.log(measurement.temperature);
     this.measurementService.insert({ ...measurement, isApproximated: false });
-    this.measurementService.measurementGateway.handleMeasurementUpdate(
-      measurement,
-    );
     return `Measurement ${measurement} successfully inserted!`;
   }
 }

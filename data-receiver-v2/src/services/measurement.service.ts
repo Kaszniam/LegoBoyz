@@ -35,9 +35,14 @@ export class MeasurementService {
     return this.measurementRepository.find();
   }
 
+  getByRfid(rfid: string) {
+    return this.measurementRepository.findBy({ rfid });
+  }
+
   @Cron(CronExpression.EVERY_5_SECONDS)
   handleCron() {
     const measurementsArrayCopy = [...this.measurementArray];
+    this.measurementArray = [];
     const measurementsAvailable = measurementsArrayCopy.length;
     this.logger.debug(
       `Measurements waiting to be added: ${measurementsAvailable}`,
@@ -58,12 +63,12 @@ export class MeasurementService {
       }, {}),
     );
 
-    if (lastFourMeasurementsFromDifferentSensors.length < 4) {
-      this.logger.debug(
-        'Less than 4 measurements from unique sensors are available, skipping.',
-      );
-      return;
-    }
+    // if (lastFourMeasurementsFromDifferentSensors.length < 4) {
+    //   this.logger.debug(
+    //     'Less than 4 measurements from unique sensors are available, skipping.',
+    //   );
+    //   return;
+    // }
 
     this.segmentService.getAll().then((segments) => {
       const rfidsOfSegmentsWithSensors =
@@ -75,7 +80,7 @@ export class MeasurementService {
         (seg) => rfidsOfSegmentsWithSensors.includes(seg.rfid),
       );
       segmentsForWhichWeNeedToGenerateMeasurements.forEach((seg) => {
-        this.measurementRepository.insert({
+        const measurement = {
           guid: uuidv4(),
           rfid: seg.rfid,
           datetime: `${Date.now()}`,
@@ -114,6 +119,10 @@ export class MeasurementService {
             seg,
           ),
           isApproximated: true,
+        };
+
+        this.measurementRepository.insert(measurement).then(() => {
+          this.measurementGateway.handleMeasurementUpdate(measurement);
         });
       });
     });
