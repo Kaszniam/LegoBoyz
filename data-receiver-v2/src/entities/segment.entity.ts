@@ -1,5 +1,9 @@
 import { Entity, Column, PrimaryColumn } from 'typeorm';
 
+/***
+ * Create table segment(guid varchar(22),  rfid varchar(24), building varchar(1), schedule integer, color varchar(64), layer integer, length float, width float, x float, y float, z float)
+ ***/
+
 @Entity()
 export class Segment {
   @Column({ length: 22 })

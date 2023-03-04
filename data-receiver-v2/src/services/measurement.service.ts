@@ -83,7 +83,7 @@ export class MeasurementService {
         const measurement = {
           guid: uuidv4(),
           rfid: seg.rfid,
-          datetime: `${Date.now()}`,
+          datetime: new Date().toISOString(),
           uv: this.approximatorService.calculateUV(
             segmentsForWhichWeDoNotNeedToGenerateMeasurements,
             lastFourMeasurementsFromDifferentSensors.map(

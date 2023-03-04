@@ -1,8 +1,12 @@
 import { Entity, Column, PrimaryColumn } from 'typeorm';
 
+/***
+ * Create table measurement(guid varchar(36), rfid varchar(24),  datetime varchar(23), uv float, light float, temperature float, humidity float, isApproximated boolean)
+ ***/
+
 @Entity()
 export class Measurement {
-  @PrimaryColumn({ length: 36 })
+  @PrimaryColumn({ length: 37 })
   guid: string;
 
   @Column({ length: 24 })
