@@ -5,14 +5,14 @@ function initializeThreeSegmentView(canvasId: string) {
   return null;
 }
 
-function dispozeThreeSegmentViewse(id: any) {
+function disposeThreeSegmentViewse(id: any) {
   return undefined;
 }
 
 export const SegmentVisualization = () => {
   useEffect(() => {
     const id = initializeThreeSegmentView("segment-canvas");
-    return () => dispozeThreeSegmentViewse(id);
+    return () => disposeThreeSegmentViewse(id);
   });
   return (
     <StyledVisualisation>
