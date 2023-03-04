@@ -22,4 +22,7 @@ export class Measurement {
 
   @Column('float')
   humidity: number;
+
+  @Column('boolean')
+  isApproximated: boolean;
 }

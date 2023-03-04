@@ -14,7 +14,7 @@ export class MeasurementController {
 
   @Post()
   addMeasurement(@Body() measurement: MeasurementData): string {
-    this.measurementService.insert(measurement);
+    this.measurementService.insert({ ...measurement, isApproximated: false });
     this.measurementService.measurementGateway.handleMeasurementUpdate(
       measurement,
     );
