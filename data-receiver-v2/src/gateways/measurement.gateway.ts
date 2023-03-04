@@ -6,10 +6,10 @@ import {
   OnGatewayConnection,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { MeasurementData } from './data/measurement';
+import { MeasurementData } from '../data/measurement';
 
 @WebSocketGateway()
-export class AppGateway
+export class MeasurementGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayConnection
 {
   private logger: Logger = new Logger('AppGateWay');
