@@ -8,7 +8,7 @@ import json
 import uuid
 from datetime import datetime
 
-config_file = open('data.json')
+config_file = open('config.json')
 
 env_data = json.load(config_file)
 
