@@ -19,6 +19,6 @@ export class AddSegments1677936191213 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(`DROP TABLE "Segment"`);
+    await queryRunner.query(`DELETE FROM Segment`);
   }
 }
