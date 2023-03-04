@@ -22,7 +22,8 @@
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.8.2",
-    "three": "^0.150.1"
+    "three": "^0.150.1",
+    "web-ifc-three": "^0.0.122"
   },
   "devDependencies": {
     "@types/date-fns": "^2.6.0",

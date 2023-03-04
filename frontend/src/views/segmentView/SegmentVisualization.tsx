@@ -2,10 +2,23 @@ import { styled } from "@mui/material";
 import { useEffect, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { IFCLoader } from "web-ifc-three/IFCLoader";
+
+const ifcLoader = new IFCLoader()
+ifcLoader.ifcManager.setWasmPath('/')
 
 function initializeThreeSegmentView(canvas: HTMLCanvasElement) {
+
   // SCENE
   const scene = new THREE.Scene();
+
+  // Loading digital twin
+  ifcLoader.load('/DigitalTwin.ifc', (digitalTwinModel) => {
+    digitalTwinModel.scale.setScalar(10)
+    digitalTwinModel.geometry.center()
+    // digitalTwinModel.ifcManager.
+    scene.add(digitalTwinModel)
+  })
 
   // LIGHTNING
   const ambientLight = new THREE.AmbientLight("#fff", 0.3);
@@ -23,7 +36,7 @@ function initializeThreeSegmentView(canvas: HTMLCanvasElement) {
       color: "#FF0",
     })
   );
-  scene.add(testCube);
+  // scene.add(testCube);
 
   // CAMERA
   const camera = new THREE.PerspectiveCamera(
