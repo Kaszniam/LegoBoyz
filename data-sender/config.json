@@ -1,0 +1,7 @@
+{
+  "name": "data-sender",
+  "version": "1.0.0",
+  "hostname": "127.0.0.1",
+  "port": 65432,
+  "rfid": 1
+}
