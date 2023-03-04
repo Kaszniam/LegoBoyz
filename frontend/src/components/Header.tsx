@@ -9,7 +9,7 @@ export const Header: FunctionComponent<HeaderProps> = () => {
     <AppBar position="static">
       <Toolbar>
         <StyledLink to="/">
-          <img className="icon" src="/ape.png" alt="Logo" />
+          <img className="icon" src="/brick.svg" alt="Logo" />
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             LegoBoyz
           </Typography>

@@ -89,7 +89,7 @@ export const SegmentView: FunctionComponent<SegmentViewProps> = () => {
         <Typography variant="h4">Segment ID: {segmentId}</Typography>
         <div className="segment-details">
           <SegmentDetails />
-          <SegmentVisualization />
+          <SegmentVisualization segmentId={segmentId!!} />
         </div>
         <div className="segment-charts">
           <Accordion defaultExpanded>
