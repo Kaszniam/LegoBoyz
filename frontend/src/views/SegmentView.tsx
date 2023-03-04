@@ -32,6 +32,7 @@ import ChartStreaming from "chartjs-plugin-streaming";
 import "chartjs-adapter-luxon";
 import { Line } from "react-chartjs-2";
 import { DateTime } from "luxon";
+import { LineChart } from "../components/LineChart";
 
 ChartJS.register(
   ChartStreaming,
@@ -52,7 +53,7 @@ const options = {
     x: {
       type: "realtime",
       realtime: {
-        duration: 1000 * 60 * 60,
+        duration: 1000 * 60
       },
       title: {
         display: true,
@@ -191,6 +192,7 @@ export const SegmentView: FunctionComponent<SegmentViewProps> = () => {
                 }}
                 options={options}
               />
+              <LineChart/>
             </AccordionDetails>
           </Accordion>
           <Accordion>
