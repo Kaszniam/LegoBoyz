@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { geometryConverter } from "../../services/GeometryConverterService";
 import { IFCLoader } from "web-ifc-three/IFCLoader";
 import { BufferGeometry, Mesh, MeshStandardMaterial } from "three";
 
@@ -11,17 +10,6 @@ const ifcLoader = new IFCLoader();
 ifcLoader.ifcManager.setWasmPath("/");
 
 const gltfLoader = new GLTFLoader();
-
-// 0: "2tQH9P2Ob72uMNUR3T$rU6"
-// 1: "37dfUbgm9DQwO77uoSM6Zh"
-// 2: "2tQH9P2Ob72uMNUR3T$sqs"
-// 3: "2tQH9P2Ob72uMNUR3T$rV_"
-// 4: "2tQH9P2Ob72uMNUR3T$s_r"
-// 5: "2tQH9P2Ob72uMNUR3T$syt"
-// 6: "2tQH9P2Ob72uMNUR3T$sWL"
-// 7: "2tQH9P2Ob72uMNUR3T$sWr"
-// 8: "2tQH9P2Ob72uMNUR3T$rVx"
-// 9: "2tQH9P2Ob72uMNUR3T$rV$"
 
 const colorMap: Record<string, string> = {
   BLACK: "#2E2E2E",
@@ -48,7 +36,7 @@ function initializeThreeSegmentView(
   //   console.log("Model loaded!");
   // })
 
-  // gltfLoader.load("/untitled7.glb", (wholeModel) => {
+  // gltfLoader.load("/DigitalTwin.glb", (wholeModel) => {
   //   const group = new THREE.Group()
   //   group.add(...wholeModel.scene.children.filter(it => it.name.startsWith('IfcBuildingElementProxy')))
   //   group.traverse((element) => {
@@ -64,7 +52,7 @@ function initializeThreeSegmentView(
   //   scene.add(group)
   // });
 
-  gltfLoader.load("/untitled7.glb", (wholeModel) => {
+  gltfLoader.load("/DigitalTwin.glb", (wholeModel) => {
     const segment: Mesh<BufferGeometry, MeshStandardMaterial> =
       wholeModel.scene.children.find(
         (it) => it.name === `IfcBuildingElementProxy${segmentId}`
@@ -81,17 +69,6 @@ function initializeThreeSegmentView(
   const sun = new THREE.DirectionalLight("#fff", 2);
   sun.position.set(3, 10, -4);
   scene.add(sun);
-
-  // scene.add(new THREE.DirectionalLightHelper(sun))
-
-  // OBJECTS
-  const testCube = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 1, 1),
-    new THREE.MeshStandardMaterial({
-      color: "#FF0",
-    })
-  );
-  // scene.add(testCube);
 
   // CAMERA
   const camera = new THREE.PerspectiveCamera(
@@ -114,11 +91,11 @@ function initializeThreeSegmentView(
   controls.enableDamping = true;
 
   const resizeListener = () => {
-    renderer.setSize(canvas.width, canvas.height);
-    camera.aspect = canvas.width / canvas.height;
+    renderer.setSize(canvas.getBoundingClientRect().width, canvas.getBoundingClientRect().height);
+    camera.aspect = canvas.getBoundingClientRect().width / canvas.getBoundingClientRect().height;
     camera.updateProjectionMatrix();
   };
-  canvas.addEventListener("resize", resizeListener);
+  window.addEventListener("resize", resizeListener);
 
   let running = true;
   renderer.render(scene, camera);
@@ -137,7 +114,7 @@ function initializeThreeSegmentView(
     // dispose threejs element
     console.log("disposing threejs");
     running = false;
-    canvas.removeEventListener("resize", resizeListener);
+    window.removeEventListener("resize", resizeListener);
     controls.dispose();
     scene.traverse((element: any) => {
       if (element && typeof element.dispose === "function") {
@@ -155,7 +132,7 @@ export const SegmentVisualization = ({ segmentId }: { segmentId: string }) => {
     if (canvas != null) {
       return initializeThreeSegmentView(segmentId, canvas);
     }
-  }, [canvas]);
+  }, [canvas, segmentId]);
 
   return (
     <StyledVisualisation>
