@@ -18,7 +18,7 @@ export class MeasurementService {
     @Inject('MEASUREMENT_REPOSITORY')
     private measurementRepository: Repository<Measurement>,
     private segmentService: SegmentService,
-    private approximatorService: ApproximationService,
+    private approximationService: ApproximationService,
     public measurementGateway: MeasurementGateway,
   ) {}
 
@@ -84,21 +84,21 @@ export class MeasurementService {
           guid: uuidv4(),
           rfid: seg.rfid,
           datetime: new Date().toISOString(),
-          uv: this.approximatorService.calculateUV(
+          uv: this.approximationService.calculateUV(
             segmentsForWhichWeDoNotNeedToGenerateMeasurements,
             lastFourMeasurementsFromDifferentSensors.map(
               (val: MeasurementData) => ({ rfid: val.rfid, uv: val.uv }),
             ),
             seg,
           ),
-          light: this.approximatorService.calculateLux(
+          light: this.approximationService.calculateLux(
             segmentsForWhichWeDoNotNeedToGenerateMeasurements,
             lastFourMeasurementsFromDifferentSensors.map(
               (val: MeasurementData) => ({ rfid: val.rfid, lux: val.light }),
             ),
             seg,
           ),
-          temperature: this.approximatorService.calculateTemperature(
+          temperature: this.approximationService.calculateTemperature(
             segmentsForWhichWeDoNotNeedToGenerateMeasurements,
             lastFourMeasurementsFromDifferentSensors.map(
               (val: MeasurementData) => ({
@@ -108,7 +108,7 @@ export class MeasurementService {
             ),
             seg,
           ),
-          humidity: this.approximatorService.calculateHumidity(
+          humidity: this.approximationService.calculateHumidity(
             segmentsForWhichWeDoNotNeedToGenerateMeasurements,
             lastFourMeasurementsFromDifferentSensors.map(
               (val: MeasurementData) => ({
