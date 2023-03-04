@@ -1,64 +1,71 @@
-import React, { useEffect, FC } from 'react';
+import { useEffect, useRef, FC } from 'react';
 import Highcharts from 'highcharts';
-import HighchartsReact from 'highcharts-react-official';
 
 interface LineChartProps {
-    graphTitle: string;
-    xAxisTitle: string;
-    yAxisTitle: string;
-    
+  data: {
+    x: number[];
+    y: number[];
+  }
+  dataTitle: string;
+  graphTitle: string;
+  xAxisTitle: string;
+  yAxisTitle: string;
+  unit: string;
 }
 
 
-export const LineChart:FC<LineChartProps> = ({graphTitle, xAxisTitle, yAxisTitle}) => {
+export const LineChart:FC<LineChartProps> = ({graphTitle, xAxisTitle, yAxisTitle, data, dataTitle}) => {
   
+    const container = useRef<HTMLInputElement>(null);
+
+    const getData = () => {
+        const result = [];
+        for (let i = 0; i < data.x.length; i++) {
+          result.push([data.x[i], data.y[i]]);
+        }
+        return result;
+    }
+
+    useEffect(() => {
+      container.current!.id = (Math.random()*100).toString(36)
+    }, [])
+
     const options = {
         title: {
-          text: {graphTitle},
+          text: graphTitle,
         },
         xAxis: {
           title: {
-            text: {xAxisTitle},
+            text: xAxisTitle,
           },
         },
         yAxis: {
           title: {
-            text: {yAxisTitle},
+            text: yAxisTitle,
           },
         },
         series: [
           {
             type: 'line',
-            name: 'Linear Graph',
-            data: [
-              [0, 0],
-              [1, 1],
-              [2, 2],
-              [3, 3],
-              [4, 4],
-              [5, 5],
-            ],
+            name: dataTitle,
+            data: getData(),
+            lineColor:"rgba(255, 99, 132, 0.5)",
+            marker: {
+              fillColor:"rgba(255, 99, 132, 0.8)"
+            },
           },
-          {
-            type: 'line',
-            name: 'OtherGraph',
-            data: [
-              [0, 1],
-              [1, 0],
-              [2, 3],
-              [3, 2],
-              [4, 6],
-              [5, 8],
-            ],
-          },
+
         ],
+        chart: {
+          borderColor: "rgb(255, 99, 132)",
+        }
       };
 
     useEffect(() => {
-        Highcharts.chart('linear-graph', options)
+        Highcharts.chart(`${container.current!.id}`, options)
       }, []);
 
 
-  return  <div id="linear-graph"></div>;
+  return  <div ref={container}></div>;
   
 }
