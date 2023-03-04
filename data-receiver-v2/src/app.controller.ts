@@ -1,27 +1,24 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { AppService } from './app.service';
+import { MeasurementData } from './data/measurement';
+import { MeasurementService } from './services/measurement.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly appService: AppService,
+    private readonly measurementService: MeasurementService,
+  ) {}
 
   @Get()
   getDefault(): string {
     return this.appService.getDefault();
   }
 
-  @Get('temperature')
-  getTemperature(): string {
-    return this.appService.getTemperature();
-  }
-
-  @Get('UV')
-  getUV(): string {
-    return this.appService.getUV();
-  }
-
-  @Get('Humidity')
-  getHumidity(): string {
-    return this.appService.getHumidity();
+  @Post()
+  addMeasurement(@Body() measurement: MeasurementData): string {
+    this.measurementService.insert(measurement);
+    this.appService.appGateway.handleMeasurementUpdate(measurement);
+    return `Measurement ${measurement} successfully inserted!`;
   }
 }
