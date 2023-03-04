@@ -1,11 +1,10 @@
-import { FunctionComponent, useEffect, useState } from "react";
+import { FunctionComponent, useState } from "react";
 import { StyledPageContainer } from "../components/StyledPageContainer";
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  css,
-  makeStyles,
+  IconButton,
   Paper,
   styled,
   Table,
@@ -17,21 +16,22 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend,
   CategoryScale,
+  Chart as ChartJS,
+  Legend,
   LinearScale,
-  PointElement,
   LineElement,
-  Title,
+  PointElement,
   TimeScale,
+  Title,
+  Tooltip,
 } from "chart.js";
 import ChartStreaming from "chartjs-plugin-streaming";
 import "chartjs-adapter-luxon";
 import { Line } from "react-chartjs-2";
 import { DateTime } from "luxon";
+import { StyledLink } from "../components/StyledLink";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 ChartJS.register(
   ChartStreaming,
@@ -98,6 +98,11 @@ export const SegmentView: FunctionComponent<SegmentViewProps> = () => {
   return (
     <StyledPageContainer>
       <StyledSegmentPage>
+        <StyledLink to="/">
+          <ArrowBackIcon className="icon" />
+          <Typography variant="h5">Back</Typography>
+        </StyledLink>
+        <Typography variant="h4">Segment ID: 1234-ASDF-4567.</Typography>
         <div className="segment-details">
           <Paper>
             <Table aria-label="Segment Details">
@@ -111,49 +116,37 @@ export const SegmentView: FunctionComponent<SegmentViewProps> = () => {
                 <TableRow
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell>
-                    ID
-                  </TableCell>
+                  <TableCell>ID</TableCell>
                   <TableCell align="right">1234-ASDF-4567</TableCell>
                 </TableRow>
                 <TableRow
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell>
-                    Material
-                  </TableCell>
+                  <TableCell>Material</TableCell>
                   <TableCell align="right">Wood</TableCell>
                 </TableRow>
                 <TableRow
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell>
-                    Manufacturer
-                  </TableCell>
+                  <TableCell>Manufacturer</TableCell>
                   <TableCell align="right">Samsung</TableCell>
                 </TableRow>
                 <TableRow
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell>
-                    Mounted Time
-                  </TableCell>
+                  <TableCell>Mounted Time</TableCell>
                   <TableCell align="right">01-11-2017</TableCell>
                 </TableRow>
                 <TableRow
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell>
-                    Demounted Time
-                  </TableCell>
+                  <TableCell>Demounted Time</TableCell>
                   <TableCell align="right">01-11-2020</TableCell>
                 </TableRow>
                 <TableRow
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell>
-                    Used Time
-                  </TableCell>
+                  <TableCell>Used Time</TableCell>
                   <TableCell align="right">3 years, 2 months</TableCell>
                 </TableRow>
               </TableBody>
