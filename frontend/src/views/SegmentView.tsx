@@ -80,27 +80,23 @@ export const SegmentView: FunctionComponent<SegmentViewProps> = () => {
     )
   );
 
-  // useEffect(() => {
-  //   const intervalId = setInterval(() => {
-  //     const newLabel = DateTime.now().toISO();
-  //     setChartData((current) => {
-  //       return [
-  //         ...current,
-  //         {
-  //           x: newLabel,
-  //           y: Math.random() * 10,
-  //         },
-  //       ];
-  //     });
-  //     setLabels((labels) => [...labels, newLabel]);
-  //   }, 5000);
-  //   return () => clearInterval(intervalId);
-  // }, []);
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const newLabel = DateTime.now().toISO();
+      setChartData((current) => {
+        return [
+          ...current,
+          {
+            x: newLabel,
+            y: Math.random() * 10,
+          },
+        ];
+      });
+      setLabels((labels) => [...labels, newLabel]);
+    }, 1000);
+    return () => clearInterval(intervalId);
+  }, []);
 
-    const data = {
-      x: [0, 1, 2, 7],
-      y: [0, 2, 1, 3]
-    }
 
   return (
     <StyledPageContainer>
@@ -182,6 +178,22 @@ export const SegmentView: FunctionComponent<SegmentViewProps> = () => {
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
+              <Line
+                height={300}
+                width={1300}
+                data={{
+                  labels,
+                  datasets: [
+                    {
+                      label: "Lifespan",
+                      data: chartData,
+                      borderColor: "rgb(255, 99, 132)",
+                      backgroundColor: "rgba(255, 99, 132, 0.5)",
+                    },
+                  ],
+                }}
+                options={options}
+              />
               <LineChart data={data} graphTitle="Sample" xAxisTitle="xAxis" yAxisTitle="yAxis" dataTitle="dataTitle"  />
             </AccordionDetails>
           </Accordion>
