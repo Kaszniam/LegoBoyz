@@ -5,6 +5,9 @@ export class Measurement {
   @PrimaryColumn({ length: 36 })
   guid: string;
 
+  @Column({ length: 24 })
+  rfid: string;
+
   @Column({ length: 23 })
   datetime: string;
 
