@@ -28,23 +28,23 @@ import {
   Title,
   TimeScale,
 } from "chart.js";
-import ChartStreaming from "chartjs-plugin-streaming";
-import "chartjs-adapter-luxon";
+// import ChartStreaming from "chartjs-plugin-streaming";
+// import "chartjs-adapter-luxon";
 import { Line } from "react-chartjs-2";
 import { DateTime } from "luxon";
 import { LineChart } from "../components/LineChart";
 
-ChartJS.register(
-  ChartStreaming,
-  CategoryScale,
-  LinearScale,
-  TimeScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
+// ChartJS.register(
+//   ChartStreaming,
+//   CategoryScale,
+//   LinearScale,
+//   TimeScale,
+//   PointElement,
+//   LineElement,
+//   Title,
+//   Tooltip,
+//   Legend
+// );
 
 const options = {
   responsive: false,
@@ -53,7 +53,7 @@ const options = {
     x: {
       type: "realtime",
       realtime: {
-        duration: 1000 * 60
+        duration: 1000 * 60,
       },
       title: {
         display: true,
@@ -66,41 +66,32 @@ const options = {
 export interface SegmentViewProps {}
 
 export const SegmentView: FunctionComponent<SegmentViewProps> = () => {
-  const [chartData, setChartData] = useState(
-    Array.from({ length: 100 })
-      .map((i, index) => ({
-        x: DateTime.now().minus({ hours: index }).toISO(),
-        y: Math.random() * 10,
-      }))
-      .reverse()
-  );
+  const [chartData, setChartData] = useState({
+    x: [0, 1, 2, 7],
+    y: [0, 2, 1, 3],
+  });
   const [labels, setLabels] = useState(
     Array.from({ length: 1000 }).map((i, index) =>
       DateTime.now().minus({ minutes: 48 }).toISO()
     )
   );
 
-  // useEffect(() => {
-  //   const intervalId = setInterval(() => {
-  //     const newLabel = DateTime.now().toISO();
-  //     setChartData((current) => {
-  //       return [
-  //         ...current,
-  //         {
-  //           x: newLabel,
-  //           y: Math.random() * 10,
-  //         },
-  //       ];
-  //     });
-  //     setLabels((labels) => [...labels, newLabel]);
-  //   }, 5000);
-  //   return () => clearInterval(intervalId);
-  // }, []);
-
-    const data = {
-      x: [0, 1, 2, 7],
-      y: [0, 2, 1, 3]
-    }
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setChartData((current) => {
+        console.log('new data', current)
+        return {
+          x: [...(current.x.slice(1)), (current.x.at(-1) ?? 6) + 1],
+          y: [...(current.y.slice(1)), Math.random()],
+        };
+        // return {
+        //   x: [...current.x, (current.x.at(-1) ?? 6) + 1],
+        //   y: [...current.y, Math.random()],
+        // };
+      });
+    }, 500);
+    return () => clearInterval(intervalId);
+  }, []);
 
   return (
     <StyledPageContainer>
@@ -118,49 +109,37 @@ export const SegmentView: FunctionComponent<SegmentViewProps> = () => {
                 <TableRow
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell>
-                    ID
-                  </TableCell>
+                  <TableCell>ID</TableCell>
                   <TableCell align="right">1234-ASDF-4567</TableCell>
                 </TableRow>
                 <TableRow
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell>
-                    Material
-                  </TableCell>
+                  <TableCell>Material</TableCell>
                   <TableCell align="right">Wood</TableCell>
                 </TableRow>
                 <TableRow
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell>
-                    Manufacturer
-                  </TableCell>
+                  <TableCell>Manufacturer</TableCell>
                   <TableCell align="right">Samsung</TableCell>
                 </TableRow>
                 <TableRow
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell>
-                    Mounted Time
-                  </TableCell>
+                  <TableCell>Mounted Time</TableCell>
                   <TableCell align="right">01-11-2017</TableCell>
                 </TableRow>
                 <TableRow
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell>
-                    Demounted Time
-                  </TableCell>
+                  <TableCell>Demounted Time</TableCell>
                   <TableCell align="right">01-11-2020</TableCell>
                 </TableRow>
                 <TableRow
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell>
-                    Used Time
-                  </TableCell>
+                  <TableCell>Used Time</TableCell>
                   <TableCell align="right">3 years, 2 months</TableCell>
                 </TableRow>
               </TableBody>
@@ -182,7 +161,14 @@ export const SegmentView: FunctionComponent<SegmentViewProps> = () => {
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <LineChart data={data} graphTitle="Sample" xAxisTitle="xAxis" yAxisTitle="yAxis" dataTitle="dataTitle"  />
+              <LineChart
+                unit="T"
+                data={chartData}
+                graphTitle="Sample"
+                xAxisTitle="xAxis"
+                yAxisTitle="yAxis"
+                dataTitle="dataTitle"
+              />
             </AccordionDetails>
           </Accordion>
           <Accordion>
