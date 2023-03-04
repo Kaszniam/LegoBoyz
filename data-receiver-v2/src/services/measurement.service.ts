@@ -63,12 +63,12 @@ export class MeasurementService {
       }, {}),
     );
 
-    // if (lastFourMeasurementsFromDifferentSensors.length < 4) {
-    //   this.logger.debug(
-    //     'Less than 4 measurements from unique sensors are available, skipping.',
-    //   );
-    //   return;
-    // }
+    if (lastFourMeasurementsFromDifferentSensors.length < 4) {
+      this.logger.debug(
+        'Less than 4 measurements from unique sensors are available, skipping.',
+      );
+      return;
+    }
 
     this.segmentService.getAll().then((segments) => {
       const rfidsOfSegmentsWithSensors =
