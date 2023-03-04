@@ -1,7 +1,7 @@
 {
   "name": "data-sender",
   "version": "1.0.0",
-  "hostname": "127.0.0.1",
-  "port": 65432,
-  "rfid": 1
+  "hostname": "10.2.50.206",
+  "port": 3000,
+  "rfid": "010200000000000000000305"
 }
