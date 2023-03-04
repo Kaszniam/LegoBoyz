@@ -1,27 +1,19 @@
-import {FunctionComponent, useState} from "react";
-import {StyledPageContainer} from "../components/StyledPageContainer";
-import {Accordion, AccordionDetails, AccordionSummary, styled, Typography,} from "@mui/material";
+import { FunctionComponent, useState } from "react";
+import { StyledPageContainer } from "../components/StyledPageContainer";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  styled,
+  Typography,
+} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-// import {
-//   CategoryScale,
-//   Chart as ChartJS,
-//   Legend,
-//   LinearScale,
-//   LineElement,
-//   PointElement,
-//   TimeScale,
-//   Title,
-//   Tooltip,
-// } from "chart.js";
-// import ChartStreaming from "chartjs-plugin-streaming";
-// import "chartjs-adapter-luxon";
-// import { Line } from "react-chartjs-2";
-import {DateTime} from "luxon";
-import {StyledLink} from "../components/StyledLink";
+import { DateTime } from "luxon";
+import { StyledLink } from "../components/StyledLink";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import {useParams} from "react-router-dom";
-import {SegmentVisualization} from "./segmentView/SegmentVisualization";
-import {SegmentDetails} from "./segmentView/SegmentDetails";
+import { useParams } from "react-router-dom";
+import { SegmentVisualization } from "./segmentView/SegmentVisualization";
+import { SegmentDetails } from "./segmentView/SegmentDetails";
 
 // ChartJS.register(
 //   ChartStreaming,
