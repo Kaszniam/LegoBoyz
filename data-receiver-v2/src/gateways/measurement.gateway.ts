@@ -31,7 +31,7 @@ export class MeasurementGateway
       this.server.emit('measurement-update', { measurement });
       console.log('measurement-update');
     }
-    this.server.emit(`measurement-${measurement.rfid}`, { measurement });
+    this.server.emit(`measurement-${measurement.rfid}-update`, { measurement });
     console.log(`measurement-${measurement.rfid}-update`);
     return `Measurement update event send!`;
   }
