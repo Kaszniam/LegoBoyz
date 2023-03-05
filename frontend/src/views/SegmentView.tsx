@@ -68,7 +68,7 @@ export const SegmentView: FunctionComponent<SegmentViewProps> = () => {
         </StyledLink>
         <Typography variant="h4">Segment ID: {segmentId}</Typography>
         <div className="segment-details">
-          <SegmentDetails />
+          <SegmentDetails rfId={segmentId!!} />
           <SegmentVisualization segmentId={segmentId!!} />
         </div>
         <div className="segment-charts">

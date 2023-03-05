@@ -1,47 +1,58 @@
 import {
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
 } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
+import { serverClientService } from "../../services/ServerClientService";
 
-export const SegmentDetails = () => (
+export const SegmentDetails = ({ rfId }: { rfId: string }) => {
+  const { data } = useQuery(["segment", rfId], () =>
+    serverClientService.getSegmentInfo(rfId)
+  );
+  if(!data) {
+    return <Paper>Loading...</Paper>
+  }
+  console.log(data)
+  return (
     <Paper>
-        <Table aria-label="Segment Details">
-            <TableHead>
-                <TableRow>
-                    <TableCell>Resource</TableCell>
-                    <TableCell align="right">Value</TableCell>
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                <TableRow>
-                    <TableCell>ID</TableCell>
-                    <TableCell align="right">1234-ASDF-4567</TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell>Material</TableCell>
-                    <TableCell align="right">Wood</TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell>Manufacturer</TableCell>
-                    <TableCell align="right">Samsung</TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell>Mounted Time</TableCell>
-                    <TableCell align="right">01-11-2017</TableCell>
-                </TableRow>
-                <TableRow>
-                    <TableCell>Demounted Time</TableCell>
-                    <TableCell align="right">01-11-2020</TableCell>
-                </TableRow>
-                <TableRow sx={{border: 0}}>
-                    <TableCell>Used Time</TableCell>
-                    <TableCell align="right">3 years, 2 months</TableCell>
-                </TableRow>
-            </TableBody>
-        </Table>
+      <Table aria-label="Segment Details">
+        <TableHead>
+          <TableRow>
+            <TableCell>Resource</TableCell>
+            <TableCell align="right">Value</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow>
+            <TableCell>ID</TableCell>
+            <TableCell align="right">{data.rfid}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Material</TableCell>
+            <TableCell align="right">{data.material}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Manufacturer</TableCell>
+            <TableCell align="right">{data.manufacturer}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Mounted Time</TableCell>
+            <TableCell align="right">{data.mountedTime}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Unmounted Time</TableCell>
+            <TableCell align="right">{data.demountedTime.length? data.demountedTime : '-'}</TableCell>
+          </TableRow>
+          <TableRow sx={{ border: 0 }}>
+            <TableCell>Usage Time</TableCell>
+            <TableCell align="right">{data.usedTime.length ? data.usedTime : 'Still Used'}</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
     </Paper>
-);
+  );
+};

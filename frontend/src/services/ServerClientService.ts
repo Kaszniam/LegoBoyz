@@ -5,14 +5,19 @@ import {SegmentInfo} from "../domain/SegmentInfo";
 
 export class ServerClientService {
     public async getMeasurementsForElement(rfid: string): Promise<Measurment[]> {
-        return axios.get(`${BACKEND_URL}/measurements?rfid=${rfid}`)
+        const {data} = await axios.get<Measurment[]>(`http://${BACKEND_URL}/measurements?rfid=${rfid}`);
+        return data
     }
 
     public async getAllMeasurements(): Promise<Measurment[]> {
-        return axios.get(`${BACKEND_URL}/measurements`)
+        const {data} = await axios.get<Measurment[]>(`http://${BACKEND_URL}/measurements`);
+        return data
     }
 
     public async getSegmentInfo(rfid: string): Promise<SegmentInfo> {
-        return axios.get(`${BACKEND_URL}/segments/segmentInfo?rfid=${rfid}`)
+        const {data} = await axios.get<SegmentInfo>(`http://${BACKEND_URL}/segments/segmentInfo?rfid=${rfid}`);
+        return data
     }
 }
+
+export const serverClientService = new ServerClientService()
