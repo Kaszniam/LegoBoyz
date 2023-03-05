@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && npx serve ./dist",
+    "build": "tsc && vite build && PORT=3001 npx serve ./dist",
     "preview": "vite preview"
   },
   "dependencies": {
