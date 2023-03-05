@@ -28,10 +28,10 @@ export class MeasurementGateway
 
   handleMeasurementUpdate(measurement: Measurement): string {
     if (!measurement.isApproximated) {
-      this.server.emit('measurement-update', { measurement });
+      this.server.emit('measurement-update', measurement);
       console.log('measurement-update');
     }
-    this.server.emit(`measurement-${measurement.rfid}-update`, { measurement });
+    this.server.emit(`measurement-${measurement.rfid}-update`, measurement);
     console.log(`measurement-${measurement.rfid}-update`);
     return `Measurement update event send!`;
   }
