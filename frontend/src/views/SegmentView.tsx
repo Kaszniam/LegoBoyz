@@ -14,6 +14,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useParams } from "react-router-dom";
 import { SegmentVisualization } from "./segmentView/SegmentVisualization";
 import { SegmentDetails } from "./segmentView/SegmentDetails";
+import { LineChart } from "../components/LineChart";
 
 // ChartJS.register(
 //   ChartStreaming,
@@ -27,22 +28,22 @@ import { SegmentDetails } from "./segmentView/SegmentDetails";
 //   Legend
 // );
 
-const options = {
-  responsive: false,
-  maintainAspectRatio: false,
-  scales: {
-    x: {
-      type: "realtime",
-      realtime: {
-        duration: 1000 * 60 * 60,
-      },
-      title: {
-        display: true,
-        text: "Date",
-      },
-    },
-  },
-};
+// const options = {
+//   responsive: false,
+//   maintainAspectRatio: false,
+//   scales: {
+//     x: {
+//       type: "realtime",
+//       realtime: {
+//         duration: 1000 * 60 * 60,
+//       },
+//       title: {
+//         display: true,
+//         text: "Date",
+//       },
+//     },
+//   },
+// };
 
 export interface SegmentViewProps {}
 
@@ -79,6 +80,12 @@ export const SegmentView: FunctionComponent<SegmentViewProps> = () => {
   //   }, 5000);
   //   return () => clearInterval(intervalId);
   // }, []);
+  const data = {
+    x: Array.from({ length: 100 }, (a, k) =>
+      DateTime.now().minus({ month: k }).toISO()
+    ).reverse(),
+    y: Array.from({ length: 100 }, Math.random),
+  };
   return (
     <StyledPageContainer>
       <StyledSegmentPage>
@@ -100,23 +107,15 @@ export const SegmentView: FunctionComponent<SegmentViewProps> = () => {
             >
               <Typography>Lifespan</Typography>
             </AccordionSummary>
-            <AccordionDetails>
-              {/*<Line*/}
-              {/*  height={300}*/}
-              {/*  width={1300}*/}
-              {/*  data={{*/}
-              {/*    labels,*/}
-              {/*    datasets: [*/}
-              {/*      {*/}
-              {/*        label: "Lifespan",*/}
-              {/*        data: chartData,*/}
-              {/*        borderColor: "rgb(255, 99, 132)",*/}
-              {/*        backgroundColor: "rgba(255, 99, 132, 0.5)",*/}
-              {/*      },*/}
-              {/*    ],*/}
-              {/*  }}*/}
-              {/*  options={options}*/}
-              {/*/>*/}
+            <AccordionDetails sx={{ height: "20rem" }}>
+              <LineChart
+                data={data}
+                dataTitle="temp"
+                graphTitle="Temperature"
+                xAxisTitle="Time"
+                yAxisTitle="C"
+                unit="C"
+              />
             </AccordionDetails>
           </Accordion>
           <Accordion>
