@@ -1,10 +1,10 @@
 import { Paper, styled } from "@mui/material";
 import { useEffect, useState } from "react";
 import * as THREE from "three";
+import { Mesh, MeshStandardMaterial, Object3D } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { IFCLoader } from "web-ifc-three/IFCLoader";
-import { BufferGeometry, Mesh, MeshStandardMaterial, Object3D } from "three";
 
 const ifcLoader = new IFCLoader();
 ifcLoader.ifcManager.setWasmPath("/");

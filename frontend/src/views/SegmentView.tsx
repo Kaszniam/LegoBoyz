@@ -8,7 +8,6 @@ import {
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { DateTime } from "luxon";
 import { StyledLink } from "../components/StyledLink";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useParams } from "react-router-dom";
@@ -16,83 +15,30 @@ import { SegmentVisualization } from "./segmentView/SegmentVisualization";
 import { SegmentDetails } from "./segmentView/SegmentDetails";
 import { LineChart } from "../components/LineChart";
 import { io } from "socket.io-client";
-const socket = io("localhost:3000");
+import { BACKEND_URL } from "../consts";
 
-// ChartJS.register(
-//   ChartStreaming,
-//   CategoryScale,
-//   LinearScale,
-//   TimeScale,
-//   PointElement,
-//   LineElement,
-//   Title,
-//   Tooltip,
-//   Legend
-// );
-
-// const options = {
-//   responsive: false,
-//   maintainAspectRatio: false,
-//   scales: {
-//     x: {
-//       type: "realtime",
-//       realtime: {
-//         duration: 1000 * 60 * 60,
-//       },
-//       title: {
-//         display: true,
-//         text: "Date",
-//       },
-//     },
-//   },
-// };
+const socket = io(BACKEND_URL);
 
 export interface SegmentViewProps {}
 
 export const SegmentView: FunctionComponent<SegmentViewProps> = () => {
   const { segmentId } = useParams<{ segmentId: string }>();
 
-  const [chartData, setChartData] = useState(
-    Array.from({ length: 100 })
-      .map((i, index) => ({
-        x: DateTime.now().minus({ hours: index }).toISO(),
-        y: Math.random() * 10,
-      }))
-      .reverse()
-  );
-  const [labels, setLabels] = useState(
-    Array.from({ length: 1000 }).map((i, index) =>
-      DateTime.now().minus({ minutes: 48 }).toISO()
-    )
-  );
-
-  // useEffect(() => {
-  //   const intervalId = setInterval(() => {
-  //     const newLabel = DateTime.now().toISO();
-  //     setChartData((current) => {
-  //       return [
-  //         ...current,
-  //         {
-  //           x: newLabel,
-  //           y: Math.random() * 10,
-  //         },
-  //       ];
-  //     });
-  //     setLabels((labels) => [...labels, newLabel]);
-  //   }, 5000);
-  //   return () => clearInterval(intervalId);
-  // }, []);
-  const [data, setData] = useState<{x: string[], y: number[]}>({
+  const [data, setData] = useState<{ x: string[]; y: number[] }>({
     x: [],
     y: [],
   });
 
-  socket.on("measurement-020200000000000000004399-update", (d: {measurement: { temperature: number, datetime: string}}) => {
-    setData({
-      x: [...data.x, d.measurement.datetime],
-      y: [...data.y, d.measurement.temperature],
-    })
-  });
+  socket.on(
+    "measurement-020200000000000000004399-update",
+    (d: { measurement: { temperature: number; datetime: string } }) => {
+      console.log(d);
+      setData({
+        x: [...data.x, d.measurement.datetime],
+        y: [...data.y, d.measurement.temperature],
+      });
+    }
+  );
 
   return (
     <StyledPageContainer>
