@@ -21,6 +21,10 @@ const colorMap: Record<string, string> = {
   WHITE: "#eaeaea",
 };
 
+const selectedColor = '#ABFF55'
+
+const selectedMaterial = new THREE.MeshBasicMaterial({color: selectedColor})
+
 export interface BuildingVisualisationProps {
   onRFID?: (rfid: string) => unknown;
 }
@@ -34,6 +38,7 @@ function initializeThreeSegmentView(
 
   let blocksWithoutFloor: Object3D[] = [];
 
+  const materialMap: Record<string, THREE.Material> = {}
   gltfLoader.load("/DigitalTwin.glb", (wholeModel) => {
     blocksWithoutFloor = wholeModel.scene.children.filter(
       ({ name }) =>
@@ -55,10 +60,9 @@ function initializeThreeSegmentView(
       ) {
         materialsToDispose.push(object3d.material);
         object3d.material = object3d.material.clone();
-        object3d.material.transparent = true;
         object3d.material.color.set(colorMap[object3d.material.name]);
-        object3d.material.opacity = 0.1;
         object3d.material.needsUpdate = true;
+        materialMap[object3d.name] = object3d.material;
       }
     });
     materialsToDispose.forEach((m) => m.dispose());
@@ -142,9 +146,9 @@ function initializeThreeSegmentView(
     scene.traverse((element) => {
       if (element instanceof Mesh) {
         if (element.name === pressedObject?.name) {
-          element.material.opacity = 1;
+          element.material = selectedMaterial;
         } else {
-          element.material.opacity = 0.3;
+          element.material = materialMap[element.name];
         }
       }
     });

@@ -20,7 +20,6 @@ const colorMap: Record<string, string> = {
   ORANGE: "#E8BB60",
   WHITE: "#eaeaea",
 };
-
 function initializeThreeSegmentView(
   segmentId: string,
   canvas: HTMLCanvasElement
