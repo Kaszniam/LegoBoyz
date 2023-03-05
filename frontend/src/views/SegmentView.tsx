@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent, useEffect, useState } from "react";
 import { StyledPageContainer } from "../components/StyledPageContainer";
 import {
   Accordion,
@@ -21,24 +21,55 @@ const socket = io(BACKEND_URL);
 
 export interface SegmentViewProps {}
 
+interface Measurment {
+  measurement: {
+    datetime: string;
+    guid: string;
+    humidity: number;
+    isApproximated: true;
+    light: number;
+    rfid: "020200000000000000004399";
+    temperature: number;
+    uv: number;
+  };
+}
+
 export const SegmentView: FunctionComponent<SegmentViewProps> = () => {
   const { segmentId } = useParams<{ segmentId: string }>();
 
-  const [data, setData] = useState<{ x: string[]; y: number[] }>({
-    x: [],
-    y: [],
+  const [data, setData] = useState({
+    x: [] as string[],
+    temperature: {
+      y: [] as number[],
+    },
+    humidity: {
+      y: [] as number[],
+    },
+    light: {
+      y: [] as number[],
+    },
   });
 
-  socket.on(
-    "measurement-020200000000000000004399-update",
-    (d: { measurement: { temperature: number; datetime: string } }) => {
-      console.log(d);
-      setData({
-        x: [...data.x, d.measurement.datetime],
-        y: [...data.y, d.measurement.temperature],
-      });
-    }
-  );
+  useEffect(() => {
+    const listener = (measurment: Measurment) => {
+      setData((data) => ({
+        x: [...data.x, measurment.measurement.datetime],
+        temperature: {
+          y: [...data.temperature.y, measurment.measurement.temperature],
+        },
+        humidity: {
+          y: [...data.humidity.y, measurment.measurement.humidity],
+        },
+        light: {
+          y: [...data.light.y, measurment.measurement.light],
+        },
+      }));
+    };
+    socket.on(`measurement-${segmentId}-update`, listener);
+    return () => {
+      socket.off(`measurement-${segmentId}-update`, listener);
+    };
+  }, [segmentId, setData]);
 
   return (
     <StyledPageContainer>
@@ -63,7 +94,7 @@ export const SegmentView: FunctionComponent<SegmentViewProps> = () => {
             </AccordionSummary>
             <AccordionDetails sx={{ height: "20rem" }}>
               <LineChart
-                data={data}
+                data={{ x: data.x, y: data.temperature.y }}
                 dataTitle="temp"
                 graphTitle="Temperature"
                 xAxisTitle="Time"
@@ -83,10 +114,26 @@ export const SegmentView: FunctionComponent<SegmentViewProps> = () => {
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography>
-                Nulla facilisi. Phasellus sollicitudin nulla et quam mattis
-                feugiat. Aliquam eget maximus est, id dignissim quam.
-              </Typography>
+              <div style={{ height: "10rem" }}>
+                <LineChart
+                  data={{ x: data.x, y: data.humidity.y }}
+                  dataTitle="Humidity"
+                  graphTitle="Humidity"
+                  xAxisTitle="Time"
+                  yAxisTitle="%"
+                  unit="%"
+                />
+              </div>
+              <div style={{ height: "10rem" }}>
+                <LineChart
+                  data={{ x: data.x, y: data.light.y }}
+                  dataTitle="Light"
+                  graphTitle="Light"
+                  xAxisTitle="Time"
+                  yAxisTitle="Lux"
+                  unit="Lux"
+                />
+              </div>
             </AccordionDetails>
           </Accordion>
           <StyledView></StyledView>
