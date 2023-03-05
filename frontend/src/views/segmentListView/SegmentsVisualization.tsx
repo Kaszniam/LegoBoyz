@@ -24,10 +24,16 @@ const colorMap: Record<string, string> = {
 const selectedColor = '#ABFF55'
 
 const selectedMaterial = new THREE.MeshBasicMaterial({color: selectedColor})
+const sensorMaterial = new THREE.MeshBasicMaterial({color: '#85ffe4'})
 
 export interface BuildingVisualisationProps {
   onRFID?: (rfid: string) => unknown;
 }
+
+const sensorRfids = new Set([
+    'IfcBuildingElementProxy010200000000000000003548',
+    'IfcBuildingElementProxy020200000000000000006096'
+])
 
 function initializeThreeSegmentView(
   canvas: HTMLCanvasElement,
@@ -59,7 +65,8 @@ function initializeThreeSegmentView(
         object3d.material instanceof MeshStandardMaterial
       ) {
         materialsToDispose.push(object3d.material);
-        object3d.material = object3d.material.clone();
+        const material = (sensorRfids.has(object3d.name)) ? sensorMaterial : object3d.material;
+        object3d.material = material.clone();
         object3d.material.color.set(colorMap[object3d.material.name]);
         object3d.material.needsUpdate = true;
         materialMap[object3d.name] = object3d.material;
