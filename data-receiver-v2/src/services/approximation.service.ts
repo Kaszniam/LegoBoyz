@@ -21,7 +21,7 @@ export class ApproximationService {
     uvDataWithDistance.forEach(
       (data) => (uvApproximation += data[0] - 5 * (data[1] / 1000)),
     );
-    return uvApproximation / 4;
+    return uvApproximation / 2;
   }
 
   calculateTemperature(
@@ -40,15 +40,11 @@ export class ApproximationService {
         (1 / 2);
       return [temperatureValue, distance];
     });
-    // console.log(temperatureDataWithDistance[0]);
-    // console.log(temperatureDataWithDistance[1]);
-    // console.log(temperatureDataWithDistance[2]);
-    // console.log(temperatureDataWithDistance[3]);
     let temperatureApproximation = 0;
     temperatureDataWithDistance.forEach(
       (data) => (temperatureApproximation += data[0] - data[1] / 1000),
     );
-    return temperatureApproximation / 4;
+    return temperatureApproximation / 2;
   }
 
   calculateLux(
@@ -69,7 +65,7 @@ export class ApproximationService {
     uvDataWithDistance.forEach(
       (data) => (luxApproximation += data[0] - 10 * (data[1] / 1000)),
     );
-    return luxApproximation / 4;
+    return luxApproximation / 2;
   }
 
   calculateHumidity(
@@ -92,6 +88,6 @@ export class ApproximationService {
     uvDataWithDistance.forEach(
       (data) => (humidityApproximation += data[0] - 0.5 * (data[1] / 1000)),
     );
-    return humidityApproximation / 4;
+    return humidityApproximation / 2;
   }
 }
