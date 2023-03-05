@@ -39,7 +39,7 @@ export class MeasurementService {
     return this.measurementRepository.findBy({ rfid });
   }
 
-  @Cron('*/1 * * * * *')
+  // @Cron('*/1 * * * * *')
   handleFakeRealData() {
     this.measurementGateway.handleMeasurementUpdate({
       guid: uuidv4(),
@@ -77,9 +77,13 @@ export class MeasurementService {
       }, {}),
     );
 
-    if (lastFourMeasurementsFromDifferentSensors.length < 4) {
+    if (lastFourMeasurementsFromDifferentSensors.length < 2) {
       this.logger.debug(
-        'Less than 4 measurements from unique sensors are available, skipping.',
+        `Less than 4 measurements from unique sensors are available (${
+          lastFourMeasurementsFromDifferentSensors.length
+        }) ids: ${lastFourMeasurementsFromDifferentSensors.map(
+          (m: { rfid: string }) => m.rfid + ',',
+        )}, skipping.`,
       );
       return;
     }
@@ -93,6 +97,26 @@ export class MeasurementService {
       const segmentsForWhichWeDoNotNeedToGenerateMeasurements = segments.filter(
         (seg) => rfidsOfSegmentsWithSensors.includes(seg.rfid),
       );
+      segmentsForWhichWeDoNotNeedToGenerateMeasurements.forEach((seg) => {
+        const realMeasurement: Measurement =
+          lastFourMeasurementsFromDifferentSensors.find(
+            (measurement: Measurement) => measurement.rfid == seg.rfid,
+          ) as any;
+        const measurement: Measurement = {
+          guid: realMeasurement.guid,
+          rfid: seg.rfid,
+          datetime: new Date().toISOString(),
+          uv: realMeasurement.uv,
+          light: realMeasurement.light,
+          temperature: realMeasurement.temperature,
+          humidity: realMeasurement.humidity,
+          isApproximated: false,
+        };
+
+        this.measurementRepository.insert(measurement).then(() => {
+          this.measurementGateway.handleMeasurementUpdate(measurement);
+        });
+      });
       segmentsForWhichWeNeedToGenerateMeasurements.forEach((seg) => {
         const measurement = {
           guid: uuidv4(),
