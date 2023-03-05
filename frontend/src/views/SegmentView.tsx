@@ -53,9 +53,9 @@ export const SegmentView: FunctionComponent<SegmentViewProps> = () => {
         },
       }));
     };
-    socket.on("measurement-update", listener);
+    socket.on(`measurement-${segmentId}-update`, listener);
     return () => {
-      socket.off("measurement-update", listener);
+      socket.off(`measurement-${segmentId}-update`, listener);
     };
   }, [segmentId, setData]);
 

@@ -63,9 +63,9 @@ export const SensorsDetails: FunctionComponent<SensorsDetailsProps> = () => {
         };
       });
     };
-    socket.on(`measurement-020200000000000000004399-update`, listener);
+    socket.on('measurement-update', listener);
     return () => {
-      socket.off(`measurement-020200000000000000004399-update`, listener);
+      socket.off('measurement-update', listener);
     };
   }, [setData]);
 
