@@ -16,7 +16,7 @@ export const SegmentDetails = ({ rfId }: { rfId: string }) => {
   if(!data) {
     return <Paper>Loading...</Paper>
   }
-  console.log(data)
+
   return (
     <Paper>
       <Table aria-label="Segment Details">

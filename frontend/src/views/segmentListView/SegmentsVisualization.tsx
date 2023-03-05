@@ -1,5 +1,5 @@
-import { Paper, styled } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Paper, styled, Tab, Tabs } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import * as THREE from "three";
 import { Mesh, MeshStandardMaterial, Object3D } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
@@ -191,6 +191,12 @@ export const BuildingVisualisation = ({
 
   return (
     <StyledVisualisation>
+      <Tabs value={0}  aria-label="basic tabs example">
+        <Tab label="Building" />
+        <Tab label="Temperature" />
+        <Tab label="Humidity" />
+        <Tab label="Light" />
+      </Tabs>
       <canvas id="building-canvas" ref={setCanvas} />
     </StyledVisualisation>
   );
@@ -199,6 +205,7 @@ export const BuildingVisualisation = ({
 const StyledVisualisation = styled(Paper)`
   height: 20rem;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 

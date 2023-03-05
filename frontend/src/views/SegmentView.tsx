@@ -17,47 +17,87 @@ import { LineChart } from "../components/LineChart";
 import { io } from "socket.io-client";
 import { BACKEND_URL } from "../consts";
 import { Measurment } from "../domain/Measurment";
+import { useQuery } from "@tanstack/react-query";
+import { serverClientService } from "../services/ServerClientService";
 
 const socket = io(BACKEND_URL);
 
 export interface SegmentViewProps {}
 
+interface MeasurmentData {
+  x: string[]
+  temperature: {
+    y: number[],
+  },
+  humidity: {
+    y: number[],
+  },
+  light: {
+    y: number[],
+  },
+}
+
+const initial: MeasurmentData ={
+  x: [],
+  temperature: {
+    y: [],
+  },
+  humidity: {
+    y: [],
+  },
+  light: {
+    y: [],
+  },
+}
+const mergeMeasurments = (previousValue: MeasurmentData, currentValue: Measurment) => {
+  return {
+    x: [...previousValue.x, currentValue.datetime],
+    temperature: {
+      y: [...previousValue.temperature.y, currentValue.temperature]
+    },
+    humidity: {
+      y: [...previousValue.humidity.y, currentValue.humidity]
+    },
+    light: {
+      y: [...previousValue.light.y, currentValue.light]
+    },
+  }
+};
+
 export const SegmentView: FunctionComponent<SegmentViewProps> = () => {
   const { segmentId } = useParams<{ segmentId: string }>();
 
-  const [data, setData] = useState({
-    x: [] as string[],
-    temperature: {
-      y: [] as number[],
-    },
-    humidity: {
-      y: [] as number[],
-    },
-    light: {
-      y: [] as number[],
-    },
-  });
+  const { data: serverData } = useQuery(["measurments", segmentId], async () =>{
+    const srv = await serverClientService.getMeasurementsForElement(segmentId!!)
+
+        return srv.reduce(mergeMeasurments, initial);
+  }
+  );
+  const historyData = serverData ?? initial;
+  const [data, setData] = useState<MeasurmentData>(initial);
 
   useEffect(() => {
     const listener = (measurement: Measurment) => {
-      setData((data) => ({
-        x: [...data.x, measurement.datetime],
-        temperature: {
-          y: [...data.temperature.y, measurement.temperature],
-        },
-        humidity: {
-          y: [...data.humidity.y, measurement.humidity],
-        },
-        light: {
-          y: [...data.light.y, measurement.light],
-        },
-      }));
+      setData((data) => (mergeMeasurments(data, measurement)));
     };
     socket.on(`measurement-${segmentId}-update`, listener);
     return () => {
       socket.off(`measurement-${segmentId}-update`, listener);
     };
   }, [segmentId, setData]);
+
+  const joinedData:MeasurmentData = {
+    x: [...(historyData.x), ...data.x,],
+    temperature: {
+      y: [...(historyData.temperature.y), ...data.temperature.y,],
+    },
+    humidity: {
+      y: [...(historyData.humidity.y),...data.humidity.y,],
+    },
+    light: {
+      y: [...(historyData.light.y),...data.light.y,],
+    },
+  }
 
   return (
     <StyledPageContainer>
@@ -82,7 +122,7 @@ export const SegmentView: FunctionComponent<SegmentViewProps> = () => {
             </AccordionSummary>
             <AccordionDetails sx={{ height: "20rem" }}>
               <LineChart
-                data={{ x: data.x, y: data.temperature.y }}
+                data={{ x: joinedData.x, y: joinedData.temperature.y }}
                 dataTitle="temp"
                 graphTitle="Temperature"
                 xAxisTitle="Time"
@@ -102,9 +142,9 @@ export const SegmentView: FunctionComponent<SegmentViewProps> = () => {
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <div style={{ height: "10rem" }}>
+              <div style={{ height: "17rem" }}>
                 <LineChart
-                  data={{ x: data.x, y: data.humidity.y }}
+                  data={{ x: joinedData.x, y: joinedData.humidity.y }}
                   dataTitle="Humidity"
                   graphTitle="Humidity"
                   xAxisTitle="Time"
@@ -112,9 +152,9 @@ export const SegmentView: FunctionComponent<SegmentViewProps> = () => {
                   unit="%"
                 />
               </div>
-              <div style={{ height: "10rem" }}>
+              <div style={{ height: "17rem" }}>
                 <LineChart
-                  data={{ x: data.x, y: data.light.y }}
+                  data={{ x: joinedData.x, y: joinedData.light.y }}
                   dataTitle="Light"
                   graphTitle="Light"
                   xAxisTitle="Time"

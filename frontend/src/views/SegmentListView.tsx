@@ -31,7 +31,7 @@ export const SegmentListView = () => {
           </Button>
         </StyledForm>
         <Typography variant="h3">Digital Twin Prototype</Typography>
-        <BuildingVisualisation onRFID={setRfidValue} />
+        <BuildingVisualisation onRFID={setRfidValue}  />
         <SensorsDetails />
       </StyledListView>
     </StyledPageContainer>
@@ -52,18 +52,4 @@ const StyledForm = styled("form")`
   padding-top: 2rem;
   display: flex;
   gap: 0.5rem;
-`;
-
-const Styled3DViewer = styled("div")`
-  padding: 1rem;
-  text-align: center;
-
-  h3 {
-    margin-bottom: 2rem;
-  }
-
-  canvas {
-    width: 80%;
-    height: 25rem;
-  }
 `;
