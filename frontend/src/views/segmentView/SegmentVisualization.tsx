@@ -49,13 +49,16 @@ function initializeThreeSegmentView(
   //   group.scale.setScalar(10)
   //   console.log("Model loaded!", group.children.slice(10, 20).map(it=> it.name.replace('IfcBuildingElementProxy', '')));
   //   scene.add(group)
-  // });
+  // });030200000000000000006738
 
   gltfLoader.load("/DigitalTwin.glb", (wholeModel) => {
-    const segment: Mesh<BufferGeometry, MeshStandardMaterial> =
+    let segment: Mesh<BufferGeometry, MeshStandardMaterial> =
       wholeModel.scene.children.find(
         (it) => it.name === `IfcBuildingElementProxy${segmentId}`
       ) as Mesh<BufferGeometry, MeshStandardMaterial>;
+    segment = segment ??  wholeModel.scene.children.find(
+        (it) => it.name === `IfcBuildingElementProxy030200000000000000006738`
+    ) as Mesh<BufferGeometry, MeshStandardMaterial>;
     segment.material.color.set(colorMap[segment.material.name]);
     segment.geometry.center();
     segment.scale.setScalar(30);
