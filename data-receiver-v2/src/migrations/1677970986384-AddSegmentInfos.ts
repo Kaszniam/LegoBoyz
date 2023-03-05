@@ -3,7 +3,6 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
 export class AddSegmentInfos1677970986384 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     const segments = await queryRunner.query('SELECT * FROM segment');
-    console.log(segments);
     segments.forEach((segment) =>
       queryRunner.query(
         `INSERT INTO segment_info (rfid, material, manufacturer, mountedTime, demountedTime, usedTime) VALUES (
