@@ -8,7 +8,7 @@ import {
 } from '@nestjs/websockets';
 import { Measurement } from '../entities/measurement.entity';
 
-@WebSocketGateway()
+@WebSocketGateway({ cors: '*:*' })
 export class MeasurementGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayConnection
 {
