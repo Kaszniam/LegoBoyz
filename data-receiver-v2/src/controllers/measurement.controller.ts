@@ -17,7 +17,6 @@ export class MeasurementController {
 
   @Post()
   addMeasurement(@Body() measurement: MeasurementData): string {
-    console.log(measurement.temperature);
     this.measurementService.insert({ ...measurement, isApproximated: false });
     return `Measurement ${measurement} successfully inserted!`;
   }

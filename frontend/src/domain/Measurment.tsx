@@ -4,7 +4,7 @@ export interface Measurment {
   humidity: number;
   isApproximated: true;
   light: number;
-  rfid: "020200000000000000004399";
+  rfid: string;
   temperature: number;
   uv: number;
 }
