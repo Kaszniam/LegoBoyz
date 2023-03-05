@@ -44,6 +44,11 @@ def read_data(ltr, sht):
             time.sleep(0.5)
         except requests.exceptions.ConnectionError as e:
             pass
+        except ValueError as e:
+            pass
+            pass
+        except OSError as e:
+            pass
 
 
 
