@@ -15,6 +15,8 @@ import { useParams } from "react-router-dom";
 import { SegmentVisualization } from "./segmentView/SegmentVisualization";
 import { SegmentDetails } from "./segmentView/SegmentDetails";
 import { LineChart } from "../components/LineChart";
+import { io } from "socket.io-client";
+const socket = io("localhost:3000");
 
 // ChartJS.register(
 //   ChartStreaming,
@@ -80,12 +82,18 @@ export const SegmentView: FunctionComponent<SegmentViewProps> = () => {
   //   }, 5000);
   //   return () => clearInterval(intervalId);
   // }, []);
-  const data = {
-    x: Array.from({ length: 100 }, (a, k) =>
-      DateTime.now().minus({ month: k }).toISO()
-    ).reverse(),
-    y: Array.from({ length: 100 }, Math.random),
-  };
+  const [data, setData] = useState<{x: string[], y: number[]}>({
+    x: [],
+    y: [],
+  });
+
+  socket.on("measurement-020200000000000000004399-update", (d: {measurement: { temperature: number, datetime: string}}) => {
+    setData({
+      x: [...data.x, d.measurement.datetime],
+      y: [...data.y, d.measurement.temperature],
+    })
+  });
+
   return (
     <StyledPageContainer>
       <StyledSegmentPage>

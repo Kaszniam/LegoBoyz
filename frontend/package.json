@@ -25,6 +25,7 @@
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.8.2",
+    "socket.io-client": "^4.6.1",
     "three": "^0.149.0",
     "web-ifc-three": "^0.0.122"
   },

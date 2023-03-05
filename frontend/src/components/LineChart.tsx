@@ -66,7 +66,7 @@ export const LineChart: FC<LineChartProps> = ({
           text: "Date",
         },
         time: {
-          unit: "month",
+          unit: "second",
         },
       },
     },

@@ -39,6 +39,20 @@ export class MeasurementService {
     return this.measurementRepository.findBy({ rfid });
   }
 
+  @Cron('*/1 * * * * *')
+  handleFakeRealData() {
+    this.measurementGateway.handleMeasurementUpdate({
+      guid: uuidv4(),
+      rfid: '020200000000000000004399',
+      datetime: new Date().toISOString(),
+      uv: 0,
+      light: 1,
+      temperature: Math.random() * 30,
+      humidity: 3,
+      isApproximated: true,
+    });
+  }
+
   @Cron(CronExpression.EVERY_5_SECONDS)
   handleCron() {
     const measurementsArrayCopy = [...this.measurementArray];
