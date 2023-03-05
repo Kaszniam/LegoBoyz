@@ -16,23 +16,11 @@ import { SegmentDetails } from "./segmentView/SegmentDetails";
 import { LineChart } from "../components/LineChart";
 import { io } from "socket.io-client";
 import { BACKEND_URL } from "../consts";
+import { Measurment } from "../domain/Measurment";
 
 const socket = io(BACKEND_URL);
 
 export interface SegmentViewProps {}
-
-interface Measurment {
-  measurement: {
-    datetime: string;
-    guid: string;
-    humidity: number;
-    isApproximated: true;
-    light: number;
-    rfid: "020200000000000000004399";
-    temperature: number;
-    uv: number;
-  };
-}
 
 export const SegmentView: FunctionComponent<SegmentViewProps> = () => {
   const { segmentId } = useParams<{ segmentId: string }>();
@@ -51,23 +39,23 @@ export const SegmentView: FunctionComponent<SegmentViewProps> = () => {
   });
 
   useEffect(() => {
-    const listener = (measurment: Measurment) => {
+    const listener = (measurement: Measurment) => {
       setData((data) => ({
-        x: [...data.x, measurment.measurement.datetime],
+        x: [...data.x, measurement.datetime],
         temperature: {
-          y: [...data.temperature.y, measurment.measurement.temperature],
+          y: [...data.temperature.y, measurement.temperature],
         },
         humidity: {
-          y: [...data.humidity.y, measurment.measurement.humidity],
+          y: [...data.humidity.y, measurement.humidity],
         },
         light: {
-          y: [...data.light.y, measurment.measurement.light],
+          y: [...data.light.y, measurement.light],
         },
       }));
     };
-    socket.on(`measurement-${segmentId}-update`, listener);
+    socket.on("measurement-update", listener);
     return () => {
-      socket.off(`measurement-${segmentId}-update`, listener);
+      socket.off("measurement-update", listener);
     };
   }, [segmentId, setData]);
 
